@@ -3,26 +3,19 @@
 
 using namespace std;
 
-Grid::Grid()
-{ 
-  maxHeight = 25;
-  maxWidth = 25;
-
-  grid = new char *[maxHeight];
-  for (int i = 0; i < maxHeight; ++i) {
-    grid[i] = new char[maxWidth];
-
-    // Initialize each cell in the grid to be empty by default
-    for (int j = 0; j < maxWidth; ++j) {
-      grid[i][j] = '-';
-    }
-  }
+Grid::Grid() : Grid(25, 25, CLASSIC)
+{
 }
 
-Grid::Grid(int height, int width)
+Grid::Grid(int height, int width) : Grid(height, width, CLASSIC)
+{
+}
+
+Grid::Grid(int height, int width, WrappingMode m)
 {
   maxHeight = height;
   maxWidth = width;
+  mode = m;
 
   grid = new char *[maxHeight];
   for (int i = 0; i < maxHeight; ++i) {
@@ -49,8 +42,7 @@ Grid::~Grid()
 char Grid::cellAt(int height, int width)
 {
   // Check height and width bounds
-  if (height < 0 || height > maxHeight - 1 || width < 0 ||
-      width > maxWidth - 1) {
+  if (!inBounds(height, width)) {
     cerr << "Error: Trying to access out-of-bounds cell at " << '(' << height
          << ", " << width << ')' << endl;
     return '\0';
@@ -62,8 +54,7 @@ char Grid::cellAt(int height, int width)
 void Grid::setCell(int height, int width, char value)
 {
   // Check height and width bounds
-  if (height < 0 || height > maxHeight - 1 || width < 0 ||
-      width > maxWidth - 1) {
+  if (!inBounds(height, width)) {
     cerr << "Error: Trying to change out-of-bounds cell at " << '(' << height
          << ", " << width << ')' << endl;
     return;
@@ -72,16 +63,67 @@ void Grid::setCell(int height, int width, char value)
   grid[height][width] = value;
 }
 
+bool Grid::inBounds(int height, int width)
+{
+  return height >= 0 && height < maxHeight && width >=0 && width <= maxWidth;
+}
+
 // FIXME: Finish implementation
 void Grid::advanceState()
 {
   Grid futureState{maxHeight, maxWidth};
 }
 
-// FIXME: Implement
 int Grid::countNeighbors(int height, int width)
 {
-  return 0;
+  switch (mode) {
+    case CLASSIC:
+      return countNeighborsClassic(height, width);
+      break;
+    default:
+      return 0;
+  }
+}
+
+// FIXME: Implement
+int Grid::countNeighborsClassic(int height, int width)
+{
+  int count = 0;
+  
+  // Check up
+  if (inBounds(height - 1, width) && cellAt(height - 1, width) == 'X') {
+    ++count;
+  }
+  // Check up-right
+  if (inBounds(height - 1, width + 1) && cellAt(height - 1, width + 1) == 'X') {
+    ++count;
+  }
+  // Check right
+  if (inBounds(height, width + 1) && cellAt(height, width + 1) == 'X') {
+    ++count;
+  }
+  // Check down-right
+  if (inBounds(height + 1, width + 1) && cellAt(height + 1, width + 1) == 'X') {
+    ++count;
+  }
+  // Check down
+  if (inBounds(height + 1, width) && cellAt(height + 1, width) == 'X') {
+    ++count;
+  }
+  // Check down-left
+  if (inBounds(height + 1, width - 1) && cellAt(height + 1, width - 1) == 'X') {
+    ++count;
+  }
+  // Check left
+  if (inBounds(height, width - 1) && cellAt(height, width - 1) == 'X') {
+    ++count;
+  }
+  // Check up-left
+  if (inBounds(height - 1, width - 1) && cellAt(height - 1, width - 1) == 'X') {
+    ++count;
+  }
+
+  return count;
 }
 
 void Grid::printState()

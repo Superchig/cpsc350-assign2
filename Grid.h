@@ -1,11 +1,13 @@
+#include "wrappingmode.h"
 #include <iostream>
 
 using namespace std;
 
 class Grid {
 public:
-  Grid(); // Default constructor
+  Grid();                      // Default constructor
   Grid(int height, int width); // Overloaded constructor
+  Grid(int height, int width, WrappingMode m);
   ~Grid(); // Destructor
 
   char cellAt(int height, int width);
@@ -15,10 +17,21 @@ public:
   void advanceState();
   void printState();
 
+  // A generic countNeighbors function that will use one of the three modes
+  // depending on the grid's mode.
+  int countNeighbors(int height, int width);
+
 private:
   char **grid;
   int maxHeight;
   int maxWidth;
+  WrappingMode mode; // The wrapping mode - classic, doughnut, or mirror
 
-  int countNeighbors(int height, int width);
+  // These functions count the number of neighbors surrounding a cell, either in
+  // classic, doughnut, or mirror mode.
+  int countNeighborsClassic(int height, int width);
+  int countNeighborsDoughnut(int height, int width);
+  int countNeighborsMirror(int height, int width);
+
+  bool inBounds(int height, int width);
 };
