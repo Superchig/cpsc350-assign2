@@ -1,28 +1,52 @@
 #include "Grid.h"
+#include <fstream>
 #include <iostream>
 
 using namespace std;
 
 int main(int argc, char **argv)
 {
-  Grid grid{10, 10};
-  grid.setCell(1, 1, 'X');
-  grid.setCell(2, 1, 'X');
-  grid.setCell(3, 1, 'X');
-  // grid.setCell(-1, 0, 'X'); // Invalid bounds will be checked
-  // grid.setCell(10, 0, '-'); // Invalid bounds will be checked
+  cout << "1. Use a map file of the world." << endl;
+  cout << "2. Randomly generate a new world." << endl;
+  cout << "Make a choice (1 or 2): ";
 
-  // cout << "Cell at (h = 1, w = 0): " << grid.getCell(1, 0) << endl;
-  // cout << "Cell at (h = 3, w = 3): " << grid.getCell(3, 3) << endl;
+  Grid *grid = nullptr;
+  string choice;
+  getline(cin, choice);
+  if (choice == "1") {
+    cout << "Enter path to map file: ";
+
+    string path;
+    getline(cin, path);
+
+    grid = Grid::readFrom(path);
+
+    // Check if something went wrong while trying to read in from the world
+    // file. No error messages are printed because any error messages should
+    // already be printed in the readFrom() function.
+    if (grid == nullptr) {
+      return 2;
+    }
+  }
+  else if (choice == "2") {
+    // FIXME: Implement random world generation
+    cout << "That is a valid choice, but random generation has not been "
+            "implemented yet. Sorry!"
+         << endl;
+    return 0;
+  }
+  else {
+    cout << "That was an invalid choice." << endl;
+    return 1;
+  }
+
+  grid->printState();
 
   cout << endl;
-  grid.printState();
-  cout << endl;
+  grid->advanceState();
+  grid->printState();
 
-  cout << "Number of neighboring cells: " << grid.countNeighbors(2, 1) << endl;
-
-  grid.advanceState();
-  grid.printState();
+  delete grid;
 
   return 0;
 }

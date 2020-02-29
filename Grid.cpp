@@ -1,4 +1,5 @@
 #include "Grid.h"
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -98,7 +99,8 @@ void Grid::advanceState()
   futureState.grid = tmp;
 }
 
-// FIXME: Finish implementation
+// FIXME: Finish implementation. This includes the other two ways to count
+// neighbors!
 int Grid::countNeighbors(int height, int width)
 {
   // cout << "Counting at " << height << " and " << width << endl;
@@ -107,7 +109,7 @@ int Grid::countNeighbors(int height, int width)
     return countNeighborsClassic(height, width);
     break;
   default:
-    return 0;
+    return -1;
   }
 }
 
@@ -139,4 +141,52 @@ void Grid::printState()
     }
     cout << endl;
   }
+}
+
+Grid *Grid::readFrom(string filePath)
+{
+  ifstream worldFile{filePath};
+
+  if (!worldFile.is_open()) {
+    cerr << "Error: Could not open world file at " << filePath << endl;
+    return nullptr;
+  }
+
+  // Obtain the height and width from the first two lines
+  string heightLine;
+  getline(worldFile, heightLine);
+  string widthLine;
+  getline(worldFile, widthLine);
+  int height = stoi(heightLine);
+  int width = stoi(widthLine);
+
+  // Read in the grid from the remaining lines
+  Grid *result = new Grid(height, width);
+  string line;
+  int row = 0;
+  while (getline(worldFile, line)) {
+    for (size_t col = 0; col < line.size(); ++col) {
+      const char ch = line.at(col);
+
+      switch (ch) {
+      case '-':
+        result->setCell(row, col, '-');
+        break;
+      case 'X':
+        result->setCell(row, col, 'X');
+        break;
+      default:
+        // Use row + 1 to represent line number because the rows in the grid
+        // start at 0 but the lines in a file start at 1
+        cerr << "Error: world file " << filePath << " has invalid character "
+             << ch << " at line " << (row + 1) << endl;
+        return nullptr;
+      }
+    }
+
+    ++row;
+  }
+
+  worldFile.close();
+  return result;
 }
