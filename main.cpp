@@ -40,6 +40,36 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  cout << endl;
+  cout << "How do you want to evaluate cells on the boundaries of the grid?"
+       << endl;
+  cout << "1. Classic mode - All cells off the map's boundaries count as dead."
+       << endl;
+  cout << "2. Doughnut mode - The grid wraps around itself horizontally and "
+          "vertically."
+       << endl;
+  cout << "3. Mirror mode - References off the grid are bounced back as if the "
+          "wall were a mirror."
+       << endl;
+
+  cout << "Make a choice (1, 2, or 3): ";
+  getline(cin, choice);
+
+  if (choice == "1" || choice == "2" || choice == "3") {
+    // Because enums have corresponding integer values, we can just cast one of
+    // the inputs to an enum.
+    int enumValue = stoi(choice);
+    grid->setMode((WrappingMode) enumValue);
+  } else {
+    cout << "That is not a valid choice." << endl;
+
+    // Make sure to deallocate memory for the grid
+    delete grid;
+    return 3;
+  }
+
+  cout << endl;
+
   grid->printState();
 
   cout << endl;
@@ -47,6 +77,5 @@ int main(int argc, char **argv)
   grid->printState();
 
   delete grid;
-
   return 0;
 }

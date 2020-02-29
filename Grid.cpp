@@ -143,6 +143,10 @@ void Grid::printState()
   }
 }
 
+void Grid::setMode(WrappingMode m) {
+  mode = m;
+}
+
 Grid *Grid::readFrom(string filePath)
 {
   ifstream worldFile{filePath};

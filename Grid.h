@@ -24,6 +24,9 @@ public:
   // Read in a world from a specified file. Returns nullptr if an error occurs while reading.
   static Grid *readFrom(string filePath);
 
+  // Modifier for wrapping mode.
+  void setMode(WrappingMode m);
+
 private:
   char **grid;
   int maxHeight;
