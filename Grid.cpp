@@ -72,7 +72,7 @@ bool Grid::inBounds(int height, int width)
 
 void Grid::advanceState()
 {
-  Grid futureState{maxHeight, maxWidth};
+  Grid futureState{maxHeight, maxWidth, mode};
 
   for (int i = 0; i < maxHeight; ++i) {
     for (int j = 0; j < maxWidth; ++j) {

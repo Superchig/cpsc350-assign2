@@ -21,7 +21,8 @@ public:
   // depending on the grid's mode.
   int countNeighbors(int height, int width);
 
-  // Read in a world from a specified file. Returns nullptr if an error occurs while reading.
+  // Read in a world from a specified file. Returns nullptr if an error occurs
+  // while reading.
   static Grid *readFrom(string filePath);
 
   // Modifier for wrapping mode.
