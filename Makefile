@@ -1,4 +1,4 @@
-CPPFLAGS=-Wall
+CPPFLAGS=-Wall -g
 CXX=g++
 
 all: assignment2

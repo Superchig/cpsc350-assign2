@@ -10,7 +10,7 @@ public:
   Grid(int height, int width, WrappingMode m);
   ~Grid(); // Destructor
 
-  char cellAt(int height, int width);
+  char getCell(int height, int width);
   void setCell(int height, int width, char value);
 
   // Advance the state of the grid by a generation
