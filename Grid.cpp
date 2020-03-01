@@ -133,6 +133,42 @@ int Grid::countNeighborsClassic(int height, int width)
   return count;
 }
 
+int Grid::countNeighborsMirror(int height, int width)
+{
+  int count = 0;
+
+  for (int i = -1; i <= 1; ++i) {
+    for (int j = -1; j <= 1; ++j) {
+      int neighborHeight = height + i;
+      int neighborWidth = width + j;
+
+      // Don't do anything with the neighboring cell if isn't in bounds or if
+      // the cell there is dead
+      if (!inBounds(neighborHeight, neighborWidth) ||
+          getCell(neighborHeight, neighborWidth) == '-') {
+        continue;
+      }
+
+      // Add 1 to count because there is a living neighbor cell at this position
+      ++count;
+
+      // If the neighbor is at the top or bottom row, add 1 to count because
+      // they are mirrored.
+      if (neighborHeight == 0 || neighborHeight == maxHeight - 1) {
+        count += 1;
+      }
+
+      // If the neighbor is at the left-most or right-most column, add 1 to
+      // count because they are mirrored.
+      if (neighborWidth == 0 || neighborWidth == maxWidth - 1) {
+        count += 1;
+      }
+    }
+  }
+
+  return count;
+}
+
 void Grid::printState()
 {
   for (int i = 0; i < maxHeight; ++i) {
@@ -143,7 +179,8 @@ void Grid::printState()
   }
 }
 
-void Grid::setMode(WrappingMode m) {
+void Grid::setMode(WrappingMode m)
+{
   mode = m;
 }
 
