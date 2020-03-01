@@ -108,6 +108,8 @@ int Grid::countNeighbors(int height, int width)
   case CLASSIC:
     return countNeighborsClassic(height, width);
     break;
+  case MIRROR:
+    return countNeighborsMirror(height, width);
   default:
     return -1;
   }
@@ -139,29 +141,27 @@ int Grid::countNeighborsMirror(int height, int width)
 
   for (int i = -1; i <= 1; ++i) {
     for (int j = -1; j <= 1; ++j) {
-      int neighborHeight = height + i;
-      int neighborWidth = width + j;
-
-      // Don't do anything with the neighboring cell if isn't in bounds or if
-      // the cell there is dead
-      if (!inBounds(neighborHeight, neighborWidth) ||
-          getCell(neighborHeight, neighborWidth) == '-') {
+      if (i == 0 && j == 0) {
         continue;
       }
 
-      // Add 1 to count because there is a living neighbor cell at this position
-      ++count;
+      int neighborHeight = height + i;
+      int neighborWidth = width + j;
 
-      // If the neighbor is at the top or bottom row, add 1 to count because
-      // they are mirrored.
-      if (neighborHeight == 0 || neighborHeight == maxHeight - 1) {
-        count += 1;
+      // If the area above and below the bounds would be checked, use the
+      // "mirror" cell to the bottom or top
+      if (neighborHeight == -1 || neighborHeight == maxHeight) {
+        neighborHeight = height;
       }
 
-      // If the neighbor is at the left-most or right-most column, add 1 to
-      // count because they are mirrored.
-      if (neighborWidth == 0 || neighborWidth == maxWidth - 1) {
-        count += 1;
+      // If the area to the left or right of the grid would be checked, use the
+      // "mirror" cell to the right or left
+      if (neighborWidth == -1 || neighborWidth == maxWidth) {
+        neighborWidth = width;
+      }
+
+      if (getCell(neighborHeight, neighborWidth) == 'X') {
+        ++count;
       }
     }
   }

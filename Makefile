@@ -11,3 +11,7 @@ run: assignment2
 
 clean:
 	rm *.o assignment2
+
+test: Grid.o test.cpp
+	$(CXX) $(CPPFLAGS) $^ -o $@
+	./test
