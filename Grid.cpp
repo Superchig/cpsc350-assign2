@@ -108,8 +108,12 @@ int Grid::countNeighbors(int height, int width)
   case CLASSIC:
     return countNeighborsClassic(height, width);
     break;
+  case DOUGHNUT:
+    return countNeighborsDoughnut(height, width);
+    break;
   case MIRROR:
     return countNeighborsMirror(height, width);
+    break;
   default:
     return -1;
   }
@@ -127,6 +131,46 @@ int Grid::countNeighborsClassic(int height, int width)
       // in bounds, in order to avoid trying to access non-existent cells
       if (!(i == 0 && j == 0) && inBounds(height + i, width + j) &&
           getCell(height + i, width + j) == 'X') {
+        ++count;
+      }
+    }
+  }
+
+  return count;
+}
+
+int Grid::countNeighborsDoughnut(int height, int width)
+{
+  int count = 0;
+
+  for (int i = -1; i <= 1; ++i) {
+    for (int j = -1; j <= 1; ++j) {
+      if (i == 0 && j == 0) {
+        continue;
+      }
+
+      int neighborHeight = height + i;
+      int neighborWidth = width + j;
+
+      // If the neighbor would overstep the left or right bound, put them on the
+      // opposite side
+      if (neighborHeight == -1) {
+        neighborHeight = maxHeight - 1;
+      }
+      else if (neighborHeight == maxHeight) {
+        neighborHeight = 0;
+      }
+
+      // If the neighbor would overstep the top or bottom bound, put them on the
+      // opposite side
+      if (neighborWidth == -1) {
+        neighborWidth = maxWidth - 1;
+      }
+      else if (neighborWidth == maxWidth) {
+        neighborWidth = 0;
+      }
+
+      if (getCell(neighborHeight, neighborWidth) == 'X') {
         ++count;
       }
     }
