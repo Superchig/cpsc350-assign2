@@ -99,8 +99,6 @@ void Grid::advanceState()
   futureState.grid = tmp;
 }
 
-// FIXME: Finish implementation. This includes the other two ways to count
-// neighbors!
 int Grid::countNeighbors(int height, int width)
 {
   // cout << "Counting at " << height << " and " << width << endl;
