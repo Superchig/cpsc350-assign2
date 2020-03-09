@@ -14,3 +14,6 @@ I used http://www.cplusplus.com/reference/string/stoi/ to convert strings into i
 
 I used http://www.cplusplus.com/reference/cassert/assert/ to use assert to test
 some of my functions.
+
+I used https://en.cppreference.com/w/cpp/numeric/random/rand for information on
+rand.
