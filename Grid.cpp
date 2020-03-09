@@ -30,6 +30,10 @@ Grid::Grid(int height, int width, WrappingMode m)
   }
 }
 
+Grid::Grid(Grid *other) : Grid(other->maxHeight, other->maxWidth, other->mode)
+{
+}
+
 Grid::~Grid()
 {
   // Delete each of the rows
@@ -64,6 +68,21 @@ void Grid::setCell(int height, int width, char value)
   }
 
   grid[height][width] = value;
+}
+
+int Grid::getHeight()
+{
+  return maxHeight;
+}
+
+int Grid::getWidth()
+{
+  return maxWidth;
+}
+
+WrappingMode Grid::getMode()
+{
+  return mode;
 }
 
 bool Grid::inBounds(int height, int width)
@@ -275,7 +294,6 @@ Grid *Grid::readFrom(string filePath)
   return result;
 }
 
-// FIXME: Finish this function
 Grid *Grid::generateRandom(int height, int width, double density)
 {
   Grid *result = new Grid(height, width);
@@ -296,4 +314,39 @@ Grid *Grid::generateRandom(int height, int width, double density)
   }
 
   return result;
+}
+
+void Grid::copyFrom(Grid *other)
+{
+  // Check that the dimensions are the same
+  if (maxHeight != other->maxHeight || maxWidth != other->maxWidth)
+  {
+    cerr << "Error: Trying to copy from grid with different dimensions!\n"
+      << "\tHeights " << maxHeight << " vs. " << other->maxHeight << '\n'
+      << "\tWidths " << maxWidth << " vs. " << other->maxWidth << '\n';
+    return;
+  }
+
+  for (int i = 0; i < maxHeight; ++i) { 
+    for (int j = 0; j < maxWidth; ++j) {
+      setCell(i, j, other->getCell(i, j));
+    }
+  }
+}
+
+bool Grid::equals(Grid *other)
+{
+  if (maxHeight != other->maxHeight || maxWidth != other->maxWidth) {
+    return false;
+  }
+
+  for (int i = 0; i < maxHeight; ++i) {
+    for (int j = 0; j < maxWidth; ++j) {
+      if (getCell(i, j) != other->getCell(i, j)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }

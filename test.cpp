@@ -42,9 +42,24 @@ void testDoughnut()
   cout << "cornerNeighbors: " << cornerNeighbors << endl;
   assert(cornerNeighbors == 8);
   cout << endl;
-
-  cout << "Tests run successfully!" << endl;
   delete grid;
+}
+
+// Also tests out equals
+void testCopyFrom()
+{
+  Grid *grid = Grid::readFrom("cor.txt");
+  Grid *copy = new Grid{grid};
+  copy->copyFrom(grid);
+
+  grid->printState();
+  cout << endl;
+  copy->printState();
+
+  assert(grid->equals(copy));
+
+  delete grid;
+  delete copy;
 }
 
 int main(int argc, char **argv)
@@ -54,8 +69,14 @@ int main(int argc, char **argv)
 
   cout << endl;
 
+  cout << "-----------------------------------" << endl;
   cout << "Testing doughnut..." << endl;
   testDoughnut();
 
+  cout << "-----------------------------------" << endl;
+  cout << "Testing copyFrom..." << endl;
+  testCopyFrom();
+
+  cout << "Tests run successfully!" << endl;
   return 0;
 }

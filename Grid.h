@@ -8,10 +8,16 @@ public:
   Grid();                      // Default constructor
   Grid(int height, int width); // Overloaded constructor
   Grid(int height, int width, WrappingMode m);
+  // Copy constructor. Only copies over height, width, and wrapping mode. Does
+  // NOT copy individual cells in grid.
+  Grid(Grid *other);
   ~Grid(); // Destructor
 
   char getCell(int height, int width);
   void setCell(int height, int width, char value);
+  int getHeight();
+  int getWidth();
+  WrappingMode getMode();
 
   // Advance the state of the grid by a generation
   void advanceState();
@@ -20,6 +26,9 @@ public:
   // A generic countNeighbors function that will use one of the three modes
   // depending on the grid's mode.
   int countNeighbors(int height, int width);
+
+  // Copy the contents of one grid into this one
+  void copyFrom(Grid *other);
 
   // Read in a world from a specified file. Returns nullptr if an error occurs
   // while reading.
@@ -31,6 +40,10 @@ public:
 
   // Modifier for wrapping mode.
   void setMode(WrappingMode m);
+
+  // Returns true if they both have the same cells at the same positions.
+  // Returns false otherwise.
+  bool equals(Grid *other);
 
 private:
   char **grid;

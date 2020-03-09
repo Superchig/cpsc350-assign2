@@ -121,14 +121,33 @@ int main(int argc, char **argv)
     cout << "That's an invalid choice." << endl;
   }
 
-  // May want to remove the ability to quit by typing quit in the future
+  Grid *old = new Grid(grid);
+  Grid *older = new Grid(grid);
+
+  // FIXME: May want to remove the ability to quit by typing quit in the future
   while (choice != "quit") {
+    older->copyFrom(old);
+    old->copyFrom(grid);
+
     grid->printState();
     grid->advanceState();
+
+    // Since empty worlds are "stable" (they don't change), this also catches
+    // empty worlds.
+    if (grid->equals(old) || grid->equals(older)) {
+      cout << endl;
+      grid->printState();
+      cout << "The world has stabilized." << endl;
+      cout << "Exiting..." << endl;
+      break;
+    }
+
     // Require the user to press enter.
     getline(cin, choice);
   }
 
+  delete old;
+  delete older;
   delete grid;
   return 0;
 }
