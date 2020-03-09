@@ -31,11 +31,23 @@ int main(int argc, char **argv)
     }
   }
   else if (choice == "2") {
-    // FIXME: Implement random world generation
-    cout << "That is a valid choice, but random generation has not been "
-            "implemented yet. Sorry!"
-         << endl;
-    return 0;
+    int height;
+    cout << "Input desired height of grid: ";
+    cin >> height;
+
+    int width;
+    cout << "Input desired width of grid: ";
+    cin >> width;
+
+    double density;
+    cout << "Input population density (decimal value between 0 and 1): ";
+    cin >> density;
+
+    srand(time(nullptr));
+    grid = Grid::generateRandom(height, width, density);
+
+    // Clear out the input buffer so that future input will work
+    getline(cin, choice);
   }
   else {
     cout << "That was an invalid choice." << endl;

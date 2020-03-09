@@ -25,6 +25,10 @@ public:
   // while reading.
   static Grid *readFrom(string filePath);
 
+  // Generate a random grid of given maximum height and width. The population
+  // density should be greater than 0 and less than or equal to 1
+  static Grid *generateRandom(int height, int width, double density);
+
   // Modifier for wrapping mode.
   void setMode(WrappingMode m);
 

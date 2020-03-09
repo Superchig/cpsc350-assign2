@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -271,5 +272,28 @@ Grid *Grid::readFrom(string filePath)
   }
 
   worldFile.close();
+  return result;
+}
+
+// FIXME: Finish this function
+Grid *Grid::generateRandom(int height, int width, double density)
+{
+  Grid *result = new Grid(height, width);
+  // Add 0.5 to round the number of living cells up or down, based on whether
+  // the decimal part of the floating point number is above or below 0.5
+  int livingCells = (height * width) * density + 0.5;
+
+  for (int i = 0; i < livingCells; ++i) {
+    int y = rand() % height;
+    int x = rand() % width;
+
+    while (result->getCell(y, x) == 'X') {
+      y = rand() % height;
+      x = rand() % width;
+    }
+
+    result->setCell(y, x, 'X');
+  }
+
   return result;
 }
