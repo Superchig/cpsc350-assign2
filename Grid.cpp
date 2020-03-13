@@ -233,11 +233,16 @@ int Grid::countNeighborsMirror(int height, int width)
 
 void Grid::printState()
 {
+  writeState(cout);
+}
+
+void Grid::writeState(ostream &output)
+{
   for (int i = 0; i < maxHeight; ++i) {
     for (int j = 0; j < maxWidth; ++j) {
-      cout << grid[i][j];
+      output << grid[i][j];
     }
-    cout << endl;
+    output << endl;
   }
 }
 
@@ -319,15 +324,14 @@ Grid *Grid::generateRandom(int height, int width, double density)
 void Grid::copyFrom(Grid *other)
 {
   // Check that the dimensions are the same
-  if (maxHeight != other->maxHeight || maxWidth != other->maxWidth)
-  {
+  if (maxHeight != other->maxHeight || maxWidth != other->maxWidth) {
     cerr << "Error: Trying to copy from grid with different dimensions!\n"
-      << "\tHeights " << maxHeight << " vs. " << other->maxHeight << '\n'
-      << "\tWidths " << maxWidth << " vs. " << other->maxWidth << '\n';
+         << "\tHeights " << maxHeight << " vs. " << other->maxHeight << '\n'
+         << "\tWidths " << maxWidth << " vs. " << other->maxWidth << '\n';
     return;
   }
 
-  for (int i = 0; i < maxHeight; ++i) { 
+  for (int i = 0; i < maxHeight; ++i) {
     for (int j = 0; j < maxWidth; ++j) {
       setCell(i, j, other->getCell(i, j));
     }
@@ -349,4 +353,83 @@ bool Grid::equals(Grid *other)
   }
 
   return true;
+}
+
+void Grid::printAndRunGame()
+{
+  Grid *old = new Grid(this);
+  Grid *older = new Grid(this);
+
+  int stabilizeCount = 0;
+  string input;
+  while (input != "quit") {
+    older->copyFrom(old);
+    old->copyFrom(this);
+
+    printState();
+    advanceState();
+
+    // Since empty worlds are "stable" (they don't change), this also catches
+    // empty worlds.
+    if (equals(old) || equals(older)) {
+      ++stabilizeCount;
+    }
+    else {
+      stabilizeCount = 0;
+    }
+
+    if (stabilizeCount >= 10) {
+      cout << endl;
+      printState();
+      cout << "The world has stabilized." << endl;
+      cout << "Exiting..." << endl;
+      break;
+    }
+
+    // Require the user to press enter.
+    getline(cin, input);
+  }
+
+  delete old;
+  delete older;
+}
+
+void Grid::writeAndRunGame(string filename)
+{
+  ofstream output{filename};
+
+  Grid *old = new Grid(this);
+  Grid *older = new Grid(this);
+
+  int stabilizeCount = 0;
+  string input;
+  while (true) {
+    older->copyFrom(old);
+    old->copyFrom(this);
+
+    writeState(output);
+    output << endl;
+    advanceState();
+
+    // Since empty worlds are "stable" (they don't change), this also catches
+    // empty worlds.
+    if (equals(old) || equals(older)) {
+      ++stabilizeCount;
+    }
+    else {
+      stabilizeCount = 0;
+    }
+
+    if (stabilizeCount >= 10) {
+      output << endl;
+      writeState(output);
+      output << "The world has stabilized." << endl;
+      cout << "Exiting..." << endl;
+      break;
+    }
+  }
+
+  output.close();
+  delete old;
+  delete older;
 }

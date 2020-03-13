@@ -22,6 +22,7 @@ public:
   // Advance the state of the grid by a generation
   void advanceState();
   void printState();
+  void writeState(ostream &output);
 
   // A generic countNeighbors function that will use one of the three modes
   // depending on the grid's mode.
@@ -44,6 +45,11 @@ public:
   // Returns true if they both have the same cells at the same positions.
   // Returns false otherwise.
   bool equals(Grid *other);
+
+  // Handle printing out the various states of the game to standard output or a
+  // file.
+  void printAndRunGame();
+  void writeAndRunGame(string filename);
 
 private:
   char **grid;

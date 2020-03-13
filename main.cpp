@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include <fstream>
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
@@ -106,14 +107,13 @@ int main(int argc, char **argv)
     return 0;
   }
   else if (choice == "2") {
-    // FIXME: Add some sort of distinction between pausing and pressing enter?
+    grid->printAndRunGame();
   }
   else if (choice == "3") {
-    // FIXME: Implement writing output to a file.
-    cout << "That's a valid choice. But writing output to a file has not been "
-            "implemented yet, sorry."
-         << endl;
-    
+    cout << "Input filename: ";
+    string fileName;
+    getline(cin, fileName);
+    grid->writeAndRunGame(fileName);
     delete grid;
     return 0;
   }
@@ -121,33 +121,7 @@ int main(int argc, char **argv)
     cout << "That's an invalid choice." << endl;
   }
 
-  Grid *old = new Grid(grid);
-  Grid *older = new Grid(grid);
 
-  // FIXME: May want to remove the ability to quit by typing quit in the future
-  while (choice != "quit") {
-    older->copyFrom(old);
-    old->copyFrom(grid);
-
-    grid->printState();
-    grid->advanceState();
-
-    // Since empty worlds are "stable" (they don't change), this also catches
-    // empty worlds.
-    if (grid->equals(old) || grid->equals(older)) {
-      cout << endl;
-      grid->printState();
-      cout << "The world has stabilized." << endl;
-      cout << "Exiting..." << endl;
-      break;
-    }
-
-    // Require the user to press enter.
-    getline(cin, choice);
-  }
-
-  delete old;
-  delete older;
   delete grid;
   return 0;
 }
