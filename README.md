@@ -17,3 +17,6 @@ some of my functions.
 
 I used https://en.cppreference.com/w/cpp/numeric/random/rand for information on
 rand.
+
+I used http://www.cplusplus.com/reference/thread/this_thread/sleep_for/ to pause
+time briefly in between generations.
