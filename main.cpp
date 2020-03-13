@@ -98,13 +98,7 @@ int main(int argc, char **argv)
   getline(cin, choice);
 
   if (choice == "1") {
-    // FIXME: Implement pausing between generations.
-    cout << "That's a valid choice. But pausing between generations has not "
-            "been implemented yet, sorry."
-         << endl;
-
-    delete grid;
-    return 0;
+    grid->printAndRunGameWithPause();
   }
   else if (choice == "2") {
     grid->printAndRunGame();
@@ -114,8 +108,6 @@ int main(int argc, char **argv)
     string fileName;
     getline(cin, fileName);
     grid->writeAndRunGame(fileName);
-    delete grid;
-    return 0;
   }
   else {
     cout << "That's an invalid choice." << endl;

@@ -50,6 +50,7 @@ public:
   // file.
   void printAndRunGame();
   void writeAndRunGame(string filename);
+  void printAndRunGameWithPause();
 
 private:
   char **grid;

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+#include <thread>
 
 using namespace std;
 
@@ -362,7 +363,7 @@ void Grid::printAndRunGame()
 
   int stabilizeCount = 0;
   string input;
-  while (input != "quit") {
+  while (true) {
     older->copyFrom(old);
     old->copyFrom(this);
 
@@ -430,6 +431,46 @@ void Grid::writeAndRunGame(string filename)
   }
 
   output.close();
+  delete old;
+  delete older;
+}
+
+void Grid::printAndRunGameWithPause()
+{
+  Grid *old = new Grid(this);
+  Grid *older = new Grid(this);
+
+  int stabilizeCount = 0;
+  string input;
+  while (true) {
+    older->copyFrom(old);
+    old->copyFrom(this);
+
+    printState();
+    cout << endl;
+    advanceState();
+
+    // Since empty worlds are "stable" (they don't change), this also catches
+    // empty worlds.
+    if (equals(old) || equals(older)) {
+      ++stabilizeCount;
+    }
+    else {
+      stabilizeCount = 0;
+    }
+
+    if (stabilizeCount >= 10) {
+      cout << endl;
+      printState();
+      cout << "The world has stabilized." << endl;
+      cout << "Exiting..." << endl;
+      break;
+    }
+
+    // Pause between iterations
+    this_thread::sleep_for(chrono::milliseconds(500));
+  }
+
   delete old;
   delete older;
 }
